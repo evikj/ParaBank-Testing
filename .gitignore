@@ -141,3 +141,25 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Java/Maven
+target/
+*.class
+.mtj.tmp/
+*.jar
+*.war
+*.ear
+
+# IDEs (IntelliJ, Eclipse, VS Code)
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# Playwright specific
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache
