@@ -1,0 +1,571 @@
+{
+  "info": {
+    "_postman_id": "6ae7edcc-ce5a-4b7a-9db2-256cd1ade8df",
+    "name": "ParaBank API Scenarios",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54964236",
+    "_collection_link": "https://go.postman.co/collection/54964236-6ae7edcc-ce5a-4b7a-9db2-256cd1ade8df?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "0. Initialize DB",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 or 204\", function () {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/initializeDB",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "initializeDB"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-01 Login Positive",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Response contains customer info\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.have.property(\"id\");\r",
+              "    pm.expect(jsonData.firstName).to.eql(\"John\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/login/{{username}}/{{password}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "login",
+            "{{username}}",
+            "{{password}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-02 Login Negative",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 401 or Error\", function () {\r",
+              "    \r",
+              "    pm.expect(pm.response.code).to.be.oneOf([401, 400, 200]);\r",
+              "    if(pm.response.code === 200) {\r",
+              "       pm.expect(pm.response.text()).to.include(\"The username and password could not be verified\");\r",
+              "    }\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/login/{{username}}/wrong_pass",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "login",
+            "{{username}}",
+            "wrong_pass"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-03 Create Account",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();\r",
+              "pm.environment.set(\"newAccountId\", jsonData.id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/createAccount?customerId=12212&accountType=1&fromAccountId=12345",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "createAccount"
+          ],
+          "query": [
+            {
+              "key": "customerId",
+              "value": "12212"
+            },
+            {
+              "key": "accountType",
+              "value": "1"
+            },
+            {
+              "key": "fromAccountId",
+              "value": "12345"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-04 Deposit",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Success message keywords present\", function () {\r",
+              "    var responseText = pm.response.text();\r",
+              "    \r",
+              "    pm.expect(responseText).to.include(\"Successfully\");\r",
+              "    pm.expect(responseText).to.include(\"deposited\");\r",
+              "    pm.expect(responseText).to.include(\"account\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/deposit?accountId={{newAccountId}}&amount=100",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "deposit"
+          ],
+          "query": [
+            {
+              "key": "accountId",
+              "value": "{{newAccountId}}"
+            },
+            {
+              "key": "amount",
+              "value": "100"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-05 Get Invalid Account",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404 or Error\", function () {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([404, 400, 500]);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/accounts/00000",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "accounts",
+            "00000"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-06 Transfer Negative",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Logic Check: Overdraft Protection\", function () {\r",
+              "    var responseText = pm.response.text();\r",
+              "    //fund аre insufficient but transaction passed\r",
+              "    pm.expect(responseText).to.not.include(\"Successfully transferred\");\r",
+              "    pm.expect(responseText).to.include(\"Insufficient funds\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/transfer?fromAccountId={{newAccountId}}&toAccountId=12345&amount=9999999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "transfer"
+          ],
+          "query": [
+            {
+              "key": "fromAccountId",
+              "value": "{{newAccountId}}"
+            },
+            {
+              "key": "toAccountId",
+              "value": "12345"
+            },
+            {
+              "key": "amount",
+              "value": "9999999"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-07 Request Loan Negative",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Loan is correctly denied for invalid parameters\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.approved).to.be.false; \r",
+              "\r",
+              "\t\tpm.expect(jsonData.message).to.not.be.null;\r",
+              "    pm.expect(jsonData.message).to.include(\"error\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/requestLoan?customerId=12212&amount=-1&downPayment=-1&fromAccountId={{newAccountId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "requestLoan"
+          ],
+          "query": [
+            {
+              "key": "customerId",
+              "value": "12212"
+            },
+            {
+              "key": "amount",
+              "value": "-1"
+            },
+            {
+              "key": "downPayment",
+              "value": "-1"
+            },
+            {
+              "key": "fromAccountId",
+              "value": "{{newAccountId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-08 Get Customer Accounts",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"New account exists in customer list\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    var jsonData = pm.response.json();\r",
+              "    \r",
+              "    // is newAccountId in arr\r",
+              "    var found = jsonData.some(acc => acc.id == pm.environment.get(\"newAccountId\"));\r",
+              "    pm.expect(found).to.be.true;\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/customers/12212/accounts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "customers",
+            "12212",
+            "accounts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-09 Buy Stock Position",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Stock purchase successful\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    var jsonData = pm.response.json();\r",
+              "    if(jsonData.hasOwnProperty('id')) {\r",
+              "        pm.environment.set(\"positionId\", jsonData.id);\r",
+              "    }\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "accountId",
+              "value": "{{newAccountId}}",
+              "type": "text",
+              "uuid": "9f79214d-44db-46ca-8f2d-82cd06c1ef54"
+            },
+            {
+              "key": "symbol",
+              "value": "PRST",
+              "type": "text",
+              "uuid": "53b7528b-61fe-40a3-b75f-368812eae15f"
+            },
+            {
+              "key": "shares",
+              "value": "1",
+              "type": "text",
+              "uuid": "2dd3afb3-4d8e-4d7d-8a69-87cbbd37187a"
+            },
+            {
+              "key": "pricePerShare",
+              "value": "25.50",
+              "type": "text",
+              "uuid": "6354109c-4fd0-4539-a8ae-89d0b3215dc2"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/customers/12212/buyPosition",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "customers",
+            "12212",
+            "buyPosition"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-10 Get Invalid Position",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code for invalid position\", function () {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([400, 404, 500]);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/positions/99999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "positions",
+            "99999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-11 Get Transactions",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Transaction history contains deposit\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    var jsonData = pm.response.json();\r",
+              "    \r",
+              "    // at least 1 transaction\r",
+              "    pm.expect(jsonData.length).to.be.at.least(1);\r",
+              "    \r",
+              "    // last sum 100\r",
+              "    var lastTr = jsonData[jsonData.length - 1];\r",
+              "    pm.expect(lastTr.amount).to.eql(100);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/accounts/{{newAccountId}}/transactions",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "accounts",
+            "{{newAccountId}}",
+            "transactions"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "pm.request.headers.add({key: 'Accept', value: 'application/json'});"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

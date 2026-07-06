@@ -1,0 +1,34 @@
+{
+	"id": "83afa1c6-a42f-42d5-b713-d7b8fc211265",
+	"name": "ParaBank-Prod",
+	"values": [
+		{
+			"key": "baseUrl",
+			"value": "https://parabank.parasoft.com/parabank/services/bank",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "username",
+			"value": "john",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "password",
+			"value": "demo",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "newAccountId",
+			"value": 13566,
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-07-06T17:02:20.723Z",
+	"_postman_exported_using": "Postman/12.11.1"
+}
