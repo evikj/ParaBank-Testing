@@ -2,9 +2,13 @@ package tests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.AccountsPage;
 import pages.BillPayPage;
 import pages.LoginPage;
+import java.time.Duration;
 
 
 public class LoginTest extends BaseTest {
@@ -16,8 +20,11 @@ public class LoginTest extends BaseTest {
         // UI-01: sucessful login
         loginPage.login("john", "demo");
         // check title after login
-        Assertions.assertTrue(driver.getPageSource().contains("Accounts Overview"));
-        Thread.sleep(2000);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        boolean isOverviewVisible = wait.until(ExpectedConditions.textToBePresentInElementLocated(By.className("title"), "Accounts Overview"));
+
+        Assertions.assertTrue(isOverviewVisible, "Login failed or 'Accounts Overview' not displayed!");
+
     }
 
     @Test
@@ -54,5 +61,38 @@ public class LoginTest extends BaseTest {
 
         Thread.sleep(3000);
         Assertions.assertTrue(driver.getPageSource().contains("Bill Payment Complete"));
+    }
+
+    @Test
+    public void testLogoutAndSessionInvalidation() {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login("john", "demo");
+
+        loginPage.logout();
+        Assertions.assertTrue(loginPage.isUserLoggedOut(), "Logout failed!");
+
+        // access attempt after logout
+        driver.get("https://parabank.parasoft.com/parabank/overview.htm");
+
+
+        boolean redirectedToLogin = loginPage.isLoginFormVisible();
+
+        Assertions.assertTrue(redirectedToLogin,
+                "Security Breach: User can access Overview after Logout!");
+    }
+
+    @Test
+    public void testEmptyBillPayValidation() {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login("john", "demo");
+
+        BillPayPage billPayPage = new BillPayPage(driver);
+        // without filling form
+        driver.findElement(By.linkText("Bill Pay")).click();
+        driver.findElement(By.xpath("//input[@value='Send Payment']")).click();
+
+        // (Client-side validation)
+        Assertions.assertTrue(driver.getPageSource().contains("Payee name is required."),
+                "Validation failed: Empty form was submitted!");
     }
 }
