@@ -61,6 +61,8 @@ test.describe('End-to-End Business Workflows', () => {
         await page.getByRole('button', { name: 'Apply Now' }).click();
 
         // fix
+        await expect(page.locator('#loanStatus')).toHaveText('Approved', { timeout: 20000 });
+
         await expect(page.getByRole('heading', { name: 'Loan Request Processed' })).toBeVisible();
         const loanAccountLocator = page.locator('#newAccountId');
         const loanAccountId = (await loanAccountLocator.textContent())?.trim();
