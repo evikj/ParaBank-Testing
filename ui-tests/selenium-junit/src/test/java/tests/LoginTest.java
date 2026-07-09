@@ -63,6 +63,8 @@ public class LoginTest extends BaseTest {
         Assertions.assertTrue(driver.getPageSource().contains("Bill Payment Complete"));
     }
 
+    // SCENARIO: UI-10 - Logout & Session Invalidation
+    // ROLE: Security Testing - Identified BUG-03 (Insecure Session Termination)
     @Test
     public void testLogoutAndSessionInvalidation() {
         LoginPage loginPage = new LoginPage(driver);
