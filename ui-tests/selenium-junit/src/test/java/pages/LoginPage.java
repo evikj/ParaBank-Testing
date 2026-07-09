@@ -14,7 +14,6 @@ public class LoginPage {
     private By usernameField = By.name("username");
     private By passwordField = By.name("password");
     private By loginButton = By.xpath("//input[@value='Log In']");
-    private By welcomeMessage = By.className("caption");
     private By errorMessage = By.className("error");
 
     public LoginPage(WebDriver driver) {

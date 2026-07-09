@@ -17,7 +17,6 @@ public class FindTransactionsPage {
     private By findTransactionsLink = By.linkText("Find Transactions");
     private By amountField = By.id("amount");
     private By findByAmountButton = By.id("findByAmount");
-    private By transactionTable = By.id("transactionTable");
 
 
     private By transactionTableRows = By.xpath("//table[@id='transactionTable']//tbody/tr");
