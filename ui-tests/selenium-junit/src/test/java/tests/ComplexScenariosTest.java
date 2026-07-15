@@ -6,6 +6,8 @@ import pages.*;
 
 public class ComplexScenariosTest extends BaseTest {
 
+
+    // UI 8 - CHECK BALANCE CONSISTENCY
     @Test
     public void testAccountDetailsBalanceConsistency() {
         LoginPage loginPage = new LoginPage(driver);
@@ -28,6 +30,8 @@ public class ComplexScenariosTest extends BaseTest {
                 "The balance on the Overview page doesn't match the Account Details page!");
     }
 
+
+    // UI 7 - TEST CREATE AND FIND TRANSACTION
     @Test
     public void testCreateAndFindTransaction() throws InterruptedException {
         LoginPage loginPage = new LoginPage(driver);
@@ -54,6 +58,8 @@ public class ComplexScenariosTest extends BaseTest {
         Assertions.assertTrue(isFound, "Transaction of $" + uniqueAmount + " was not found in Account " + myAccountId);
     }
 
+
+    // UI 9 UPDATE CONTACT INFO
     @Test
     public void testUpdateContactInfo() {
         LoginPage loginPage = new LoginPage(driver);

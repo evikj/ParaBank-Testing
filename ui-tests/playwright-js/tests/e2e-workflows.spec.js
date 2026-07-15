@@ -39,7 +39,7 @@ test.describe('End-to-End Business Workflows', () => {
         await page.locator('input[name="verifyAccount"]').fill('99999');
         await page.locator('input[name="amount"]').fill('25.00');
 
-        // Избор на новата сметка од која се плаќа
+
         const fromAccDropdown = page.locator('select[name="fromAccountId"]');
         await expect(fromAccDropdown.locator(`option[value="${newAccountId}"]`)).toBeAttached({ timeout: 20000 });
         await fromAccDropdown.selectOption(newAccountId || "");
@@ -49,6 +49,20 @@ test.describe('End-to-End Business Workflows', () => {
 
         const successHeader = page.getByRole('heading', { name: 'Bill Payment Complete' });
         await expect(successHeader).toBeVisible({ timeout: 25000 });
+
+        // 3. Verify History
+        await page.getByRole('link', { name: 'Find Transactions' }).click();
+        const findAccDropdown = page.locator('#accountId');
+
+        // new account available
+        await expect(findAccDropdown.locator(`option[value="${newAccountId}"]`)).toBeAttached({ timeout: 20000 });
+        await findAccDropdown.selectOption(newAccountId || "");
+
+        await page.locator('#amount').fill('25.00');
+        // find in history by amount
+        await page.locator('#findByAmount').click();
+
+        await expect(page.locator('#transactionTable')).toContainText('25.00', { timeout: 20000 });
 
         console.log("E2E-01: Bill Payment successful from new account.");
     });
@@ -82,5 +96,11 @@ test.describe('End-to-End Business Workflows', () => {
         await page.getByRole('button', { name: 'Transfer' }).click();
 
         await expect(page.getByRole('heading', { name: 'Transfer Complete!' })).toBeVisible({ timeout: 20000 });
+
+        // 3. Logout
+        await page.getByRole('link', { name: 'Log Out' }).click();
+
+        await expect(page.locator('input[name="username"]')).toBeVisible();
+        console.log("E2E-02: Loan and funds transfer complete.");
     });
 });

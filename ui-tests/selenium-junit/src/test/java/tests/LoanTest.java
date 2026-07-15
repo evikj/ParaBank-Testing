@@ -7,6 +7,7 @@ import pages.RequestLoanPage;
 
 public class LoanTest extends BaseTest {
 
+    // UI 4 loan approved
     @Test
     public void testLoanApproval() {
         LoginPage loginPage = new LoginPage(driver);
@@ -20,6 +21,7 @@ public class LoanTest extends BaseTest {
         Assertions.assertEquals("Approved", status, "Loan should have been approved!");
     }
 
+    // // UI 5 loan denied
     @Test
     public void testLoanDenial() {
         LoginPage loginPage = new LoginPage(driver);

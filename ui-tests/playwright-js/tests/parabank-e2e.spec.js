@@ -33,7 +33,7 @@ test('ParaBank Full E2E Flow', async ({ page }) => {
     await amountInput.waitFor({ state: 'visible' });
 
     await page.locator('#fromAccountId option').first().waitFor({ state: 'attached' });
-    await page.waitForTimeout(1000); // Безбедносна пауза за стабилност
+    await page.waitForTimeout(1000);
 
     await amountInput.fill('10.00');
     await page.getByRole('button', { name: 'Transfer' }).click();

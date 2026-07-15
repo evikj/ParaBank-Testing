@@ -43,7 +43,7 @@ test.describe('Selenium vs Playwright Comparison Scenarios', () => {
 
     // UI-08: Balance consistency (Multi-page check)
     test('UI-08: Balance Consistency - Overview vs Details', async ({ page }) => {
-        // Одиме на Overview
+        // Overview
         await page.getByRole('link', { name: 'Accounts Overview' }).click();
 
         //first row

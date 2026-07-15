@@ -40,6 +40,8 @@ public class LoginTest extends BaseTest {
         Thread.sleep(2000);
     }
 
+
+    // UI 3 - OPEN NEW ACCOUNT
     @Test
     public void testCreateSavingsAccount() {
         LoginPage loginPage = new LoginPage(driver);
@@ -51,6 +53,8 @@ public class LoginTest extends BaseTest {
         Assertions.assertTrue(accountsPage.isAccountOpenedSuccessfully(), "Failed to open new Savings account!");
     }
 
+
+    // UI 6 - BILL PAY PROCESS
     @Test
     public void testBillPayment() throws InterruptedException {
         LoginPage loginPage = new LoginPage(driver);
@@ -83,6 +87,8 @@ public class LoginTest extends BaseTest {
                 "Security Breach: User can access Overview after Logout!");
     }
 
+
+    // UI 11 - EMPTY FORM VALIDATION
     @Test
     public void testEmptyBillPayValidation() {
         LoginPage loginPage = new LoginPage(driver);
