@@ -100,7 +100,7 @@ public class LoginTest extends BaseTest {
         loginPage.login("john", "demo");
 
         BillPayPage billPayPage = new BillPayPage(driver);
-        // without filling form
+
         driver.findElement(By.linkText("Bill Pay")).click();
         driver.findElement(By.xpath("//input[@value='Send Payment']")).click();
 
