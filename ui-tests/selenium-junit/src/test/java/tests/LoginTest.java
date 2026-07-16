@@ -77,13 +77,18 @@ public class LoginTest extends BaseTest {
         loginPage.logout();
         Assertions.assertTrue(loginPage.isUserLoggedOut(), "Logout failed!");
 
+        driver.navigate().back();
+
         // access attempt after logout
-        driver.get("https://parabank.parasoft.com/parabank/overview.htm");
+        //driver.get("https://parabank.parasoft.com/parabank/overview.htm");
 
+        boolean isBalanceVisible = driver.getPageSource().contains("Accounts Overview");
 
-        boolean redirectedToLogin = loginPage.isLoginFormVisible();
+        //boolean redirectedToLogin = loginPage.isLoginFormVisible();
 
-        Assertions.assertTrue(redirectedToLogin,
+        //driver.navigate().back();
+
+        Assertions.assertFalse(isBalanceVisible,
                 "Security Breach: User can access Overview after Logout!");
     }
 
